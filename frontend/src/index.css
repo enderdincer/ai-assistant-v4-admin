@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* Dark theme defaults */
+:root {
+  --color-bg: #111827;
+  --color-card: #1f2937;
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+}
+
+body {
+  @apply bg-gray-900 text-gray-100 antialiased;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Custom glow effects for service cards */
+.glow-green {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), 0 0 40px rgba(34, 197, 94, 0.2);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.2);
+}
+
+.glow-gray {
+  box-shadow: 0 0 10px rgba(107, 114, 128, 0.3);
+}
+
+/* Pulse animation for status dots */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
