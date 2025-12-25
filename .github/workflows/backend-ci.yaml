@@ -64,5 +64,4 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ${{ vars.IMAGE_REGISTRY }}/${{ vars.IMAGE_REGISTRY_OWNER }}/ai-assistant-admin-backend:latest,
-            ${{ vars.IMAGE_REGISTRY }}/${{ vars.IMAGE_REGISTRY_OWNER }}/ai-assistant-admin-backend:${{ steps.semantic_release.outputs.new_release_version }}
+            ${{ vars.IMAGE_REGISTRY }}/${{ vars.IMAGE_REGISTRY_OWNER }}/ai-assistant-admin-backend:latest${{ steps.semantic_release.outputs.new_release_version && format(',{0}/{1}/ai-assistant-admin-backend:{2}', vars.IMAGE_REGISTRY, vars.IMAGE_REGISTRY_OWNER, steps.semantic_release.outputs.new_release_version) || '' }}

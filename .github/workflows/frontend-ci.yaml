@@ -60,8 +60,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend
+          context: .
+          file: ./frontend/Dockerfile
           push: true
           tags: |
-            ${{ vars.IMAGE_REGISTRY }}/${{ vars.IMAGE_REGISTRY_OWNER }}/ai-assistant-admin-frontend:latest,
-            ${{ vars.IMAGE_REGISTRY }}/${{ vars.IMAGE_REGISTRY_OWNER }}/ai-assistant-admin-frontend:${{ steps.semantic_release.outputs.new_release_version }}
+            ${{ vars.IMAGE_REGISTRY }}/${{ vars.IMAGE_REGISTRY_OWNER }}/ai-assistant-admin-frontend:latest${{ steps.semantic_release.outputs.new_release_version && format(',{0}/{1}/ai-assistant-admin-frontend:{2}', vars.IMAGE_REGISTRY, vars.IMAGE_REGISTRY_OWNER, steps.semantic_release.outputs.new_release_version) || '' }}
