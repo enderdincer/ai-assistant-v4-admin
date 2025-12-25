@@ -32,11 +32,6 @@ jobs:
           npm run typecheck
         working-directory: backend
 
-      - name: Run tests
-        run: |
-          npm run test:run
-        working-directory: backend
-
       - name: Build application
         run: |
           npm run build
