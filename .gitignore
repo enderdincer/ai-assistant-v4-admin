@@ -49,3 +49,7 @@ Thumbs.db
 # Misc
 *.pem
 .vercel
+
+# Docker
+docker-compose.override.yml
+.docker/

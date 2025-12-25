@@ -1,0 +1,94 @@
+# =============================================================================
+# AI Assistant v4 Admin Dashboard - Docker Compose
+# =============================================================================
+# Usage:
+#   docker compose up -d              # Start all services
+#   docker compose up -d --build      # Rebuild and start
+#   docker compose down               # Stop all services
+#   docker compose logs -f            # View logs
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # MQTT Broker - Eclipse Mosquitto
+  # ---------------------------------------------------------------------------
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: admin-mqtt
+    ports:
+      - "${MQTT_PORT:-1883}:1883"
+      - "${MQTT_WS_PORT:-9001}:9001"
+    volumes:
+      - mqtt-data:/mosquitto/data
+      - mqtt-logs:/mosquitto/log
+    command: mosquitto -c /mosquitto-no-auth.conf
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Backend - Node.js + Express + MQTT + WebSocket
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: admin-backend
+    ports:
+      - "${PORT:-3001}:3001"
+      - "${WS_PORT:-3002}:3002"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=3001
+      - WS_PORT=3002
+      - MQTT_BROKER_URL=mqtt://mqtt:1883
+      - MQTT_CLIENT_ID=${MQTT_CLIENT_ID:-admin-dashboard-backend}
+      - SERVICE_TIMEOUT_MS=${SERVICE_TIMEOUT_MS:-60000}
+      - HEALTH_CHECK_INTERVAL_MS=${HEALTH_CHECK_INTERVAL_MS:-5000}
+    depends_on:
+      mqtt:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Frontend - React + Vite + Nginx
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        - VITE_WS_URL=${VITE_WS_URL:-ws://localhost:3002}
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:3001}
+    container_name: admin-frontend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  mqtt-data:
+    driver: local
+  mqtt-logs:
+    driver: local
