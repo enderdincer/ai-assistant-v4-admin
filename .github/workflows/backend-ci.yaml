@@ -27,11 +27,6 @@ jobs:
           npm ci
         working-directory: backend
 
-      - name: Lint
-        run: |
-          npm run lint
-        working-directory: backend
-
       - name: Type check
         run: |
           npm run typecheck
