@@ -21,11 +21,13 @@ Real-time monitoring dashboard for [AI Assistant v4](https://github.com/enderdin
 ```
 
 **Services Monitored:**
+
 - audio_collector, transcription, speech, assistant, text_interaction, memory, extraction
 
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 20+
 - Docker & Docker Compose (for containerized deployment)
 
@@ -60,6 +62,7 @@ docker compose down
 ```
 
 **Access:**
+
 - Dashboard: http://localhost:8080
 - Backend API: http://localhost:3001
 - MQTT Broker: localhost:1883
@@ -68,13 +71,13 @@ docker compose down
 
 All configuration is via environment variables. See `.env.example` for full documentation.
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SERVICE_TIMEOUT_MS` | 60000 | Time (ms) before marking a service unhealthy |
-| `HEALTH_CHECK_INTERVAL_MS` | 5000 | Interval (ms) to check for timeouts |
-| `FRONTEND_PORT` | 8080 | Dashboard port (Docker) |
-| `WS_PORT` | 3002 | WebSocket server port |
-| `VITE_WS_URL` | ws://localhost:3002 | WebSocket URL for frontend |
+| Variable                   | Default             | Description                                  |
+| -------------------------- | ------------------- | -------------------------------------------- |
+| `SERVICE_TIMEOUT_MS`       | 60000               | Time (ms) before marking a service unhealthy |
+| `HEALTH_CHECK_INTERVAL_MS` | 5000                | Interval (ms) to check for timeouts          |
+| `FRONTEND_PORT`            | 8080                | Dashboard port (Docker)                      |
+| `WS_PORT`                  | 3002                | WebSocket server port                        |
+| `VITE_WS_URL`              | ws://localhost:3002 | WebSocket URL for frontend                   |
 
 ## Project Structure
 
@@ -98,14 +101,14 @@ ai-assistant-v4-admin/
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install all dependencies |
-| `npm run dev` | Start frontend + backend |
-| `npm run build` | Build all workspaces |
-| `npm run test` | Run all tests |
-| `npm run lint` | Lint all workspaces |
-| `npm run typecheck` | TypeScript check only |
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `npm install`       | Install all dependencies |
+| `npm run dev`       | Start frontend + backend |
+| `npm run build`     | Build all workspaces     |
+| `npm run test`      | Run all tests            |
+| `npm run lint`      | Lint all workspaces      |
+| `npm run typecheck` | TypeScript check only    |
 
 ## Health Message Format
 
