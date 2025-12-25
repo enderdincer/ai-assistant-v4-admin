@@ -50,6 +50,9 @@ jobs:
       - name: Semantic Release Version
         id: semantic_release
         uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            conventional-changelog-conventionalcommits@8
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
