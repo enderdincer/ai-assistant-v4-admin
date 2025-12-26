@@ -40,8 +40,8 @@ const mqttClient = new MQTTHealthClient({
   connectTimeout: config.mqttConnectTimeout,
 });
 
-// Initialize WebSocket server on separate port
-const wss = new WebSocketServer({ port: config.wsPort });
+// Initialize WebSocket server attached to HTTP server on /ws path
+const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 const wsClients = new Set<WebSocket>();
 
 // ============================================================================
@@ -137,14 +137,14 @@ async function start(): Promise<void> {
   logger.info('Starting AI Assistant v4 Admin Dashboard Backend...');
   logger.info(`Configuration:`, {
     port: config.port,
-    wsPort: config.wsPort,
     mqttBrokerUrl: config.mqttBrokerUrl,
     serviceTimeoutMs: config.serviceTimeoutMs,
   });
 
-  // Start HTTP server
+  // Start HTTP server (WebSocket is attached to same server on /ws path)
   httpServer.listen(config.port, () => {
     logger.info(`HTTP server listening on port ${config.port}`);
+    logger.info(`WebSocket server available at ws://localhost:${config.port}/ws`);
   });
 
   // Connect to MQTT broker
@@ -158,7 +158,6 @@ async function start(): Promise<void> {
   // Start timeout monitoring
   healthManager.startTimeoutMonitoring();
 
-  logger.info(`WebSocket server listening on port ${config.wsPort}`);
   logger.info('Backend started successfully!');
 }
 
