@@ -40,7 +40,7 @@ const mqttClient = new MQTTHealthClient({
   connectTimeout: config.mqttConnectTimeout,
 });
 
-// Initialize WebSocket server
+// Initialize WebSocket server on separate port
 const wss = new WebSocketServer({ port: config.wsPort });
 const wsClients = new Set<WebSocket>();
 
