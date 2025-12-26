@@ -46,6 +46,22 @@ export const SERVICE_INFO: Record<string, { displayName: string; description: st
 };
 
 /** WebSocket configuration */
-export const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3002';
+function getWebSocketUrl(): string {
+  // If explicitly set via env var, use that
+  if (import.meta.env.VITE_WS_URL) {
+    return import.meta.env.VITE_WS_URL;
+  }
+
+  // In production (non-localhost), connect through nginx proxy
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}/api/ws`;
+  }
+
+  // Default for local development
+  return 'ws://localhost:3002';
+}
+
+export const WS_URL = getWebSocketUrl();
 export const RECONNECT_DELAY = parseInt(import.meta.env.VITE_WS_RECONNECT_DELAY || '1000', 10);
 export const MAX_RECONNECT_DELAY = parseInt(import.meta.env.VITE_WS_MAX_RECONNECT_DELAY || '30000', 10);
