@@ -18,7 +18,6 @@ RUN npm ci --workspace=frontend
 COPY frontend/ ./frontend/
 
 # Build arguments for environment variables (needed at build time for Vite)
-# Override these at build time: docker build --build-arg VITE_WS_URL=wss://your-domain.com/ws ...
 ARG VITE_WS_URL=ws://localhost:3002
 ARG VITE_API_URL=http://localhost:3001
 

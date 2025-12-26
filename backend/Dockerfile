@@ -49,15 +49,15 @@ RUN chown -R nodejs:nodejs /app
 USER nodejs
 
 # Environment variables with defaults
-# WebSocket is served on the same port as HTTP (at /ws path)
 ENV NODE_ENV=production \
     PORT=3001 \
+    WS_PORT=3002 \
     MQTT_BROKER_URL=mqtt://mqtt:1883 \
     SERVICE_TIMEOUT_MS=60000 \
     HEALTH_CHECK_INTERVAL_MS=5000
 
-# Expose HTTP port (WebSocket is on same port at /ws path)
-EXPOSE 3001
+# Expose ports
+EXPOSE 3001 3002
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
