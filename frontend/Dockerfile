@@ -18,6 +18,7 @@ RUN npm ci --workspace=frontend
 COPY frontend/ ./frontend/
 
 # Build arguments for environment variables (needed at build time for Vite)
+# Override these at build time: docker build --build-arg VITE_WS_URL=wss://your-domain.com/ws ...
 ARG VITE_WS_URL=ws://localhost:3002
 ARG VITE_API_URL=http://localhost:3001
 
@@ -38,11 +39,6 @@ COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built files from builder
 COPY --from=builder /app/frontend/dist /usr/share/nginx/html
-
-# Create script to inject environment variables at runtime
-RUN echo '#!/bin/sh' > /docker-entrypoint.d/40-inject-env.sh && \
-    echo 'envsubst < /usr/share/nginx/html/env-config.template.js > /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.d/40-inject-env.sh && \
-    chmod +x /docker-entrypoint.d/40-inject-env.sh
 
 # Expose port
 EXPOSE 80
